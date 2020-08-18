@@ -1,0 +1,20 @@
+{
+  "name": "gatsby-theme-woly-workspace",
+  "private": true,
+  "version": "0.0.1",
+  "main": "index.js",
+  "license": "MIT",
+  "author": {
+    "name": "Sergey Sova",
+    "email": "mail@sergeysova.com",
+    "url": "https://sova.dev"
+  },
+  "scripts": {
+    "build": "yarn workspace example build",
+    "deploy": "yarn workspace gatsby-theme-woly publish"
+  },
+  "workspaces": [
+    "gatsby-theme-woly",
+    "example"
+  ]
+}

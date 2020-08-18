@@ -1,0 +1,22 @@
+{
+  "name": "woly-example",
+  "version": "1.0.0",
+  "main": "index.js",
+  "private": true,
+  "author": {
+    "name": "Sergey Sova",
+    "email": "mail@sergeysova.com",
+    "url": "https://sova.dev"
+  },
+  "license": "MIT",
+  "scripts": {
+    "develop": "gatsby develop",
+    "build": "gatsby build"
+  },
+  "dependencies": {
+    "gatsby": "^2.24.47",
+    "gatsby-theme-woly": "^1.0.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0"
+  }
+}

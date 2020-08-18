@@ -1,0 +1,19 @@
+{
+  "name": "gatsby-theme-woly",
+  "version": "0.1.0-pre.3",
+  "main": "index.js",
+  "author": {
+    "name": "Sergey Sova",
+    "email": "mail@sergeysova.com",
+    "url": "https://sova.dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/woly-ui/gatsby-theme.git",
+    "directory": "gatsby-theme-woly"
+  },
+  "license": "MIT",
+  "peerDependencies": {
+    "gatsby": "^2.6.0"
+  }
+}
