@@ -11,7 +11,9 @@
   },
   "scripts": {
     "build": "yarn workspace example build",
-    "deploy": "yarn workspace gatsby-theme-woly publish"
+    "deploy": "yarn workspace gatsby-theme-woly publish",
+    "theme": "yarn workspace gatsby-theme-woly",
+    "example": "yarn workspace example"
   },
   "workspaces": [
     "gatsby-theme-woly",

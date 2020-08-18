@@ -21,5 +21,21 @@
   "license": "MIT",
   "peerDependencies": {
     "gatsby": "^2.6.0"
+  },
+  "dependencies": {
+    "@mdx-js/mdx": "^1.6.16",
+    "@mdx-js/react": "^1.6.16",
+    "gatsby-plugin-mdx": "^1.2.34",
+    "gatsby-plugin-react-helmet": "^3.3.10",
+    "gatsby-plugin-sitemap": "^2.4.11",
+    "gatsby-plugin-styled-components": "^3.3.10",
+    "react-helmet": "^6.1.0"
+  },
+  "devDependencies": {
+    "babel-plugin-styled-components": "^1.11.1",
+    "gatsby": "^2.24.47",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "styled-components": "^5.1.1"
   }
 }
