@@ -1,5 +1,5 @@
 {
-  "name": "woly-example",
+  "name": "example",
   "version": "1.0.0",
   "main": "index.js",
   "private": true,
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "gatsby": "^2.24.47",
-    "gatsby-theme-woly": "^1.0.0",
+    "gatsby-theme-woly": "^0.1.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0"
   }
