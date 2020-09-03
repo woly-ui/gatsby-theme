@@ -10,7 +10,16 @@ module.exports = (themeOptions) => {
         resolve: 'gatsby-plugin-styled-components',
         options: { displayName: IS_DEV },
       },
-      { resolve: `gatsby-plugin-mdx` },
+      {
+        resolve: `gatsby-source-filesystem`,
+        options: {
+          name: `usages`,
+          path: themeOptions.components,
+        },
+      },
+      {
+        resolve: `gatsby-plugin-mdx`,
+      },
     ],
   };
 };
