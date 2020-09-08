@@ -30,6 +30,7 @@
   "dependencies": {
     "@mdx-js/mdx": "^1.6.16",
     "@mdx-js/react": "^1.6.16",
+    "change-case": "^4.1.1",
     "gatsby-plugin-mdx": "^1.2.34",
     "gatsby-plugin-react-helmet": "^3.3.10",
     "gatsby-plugin-sitemap": "^2.4.11",
