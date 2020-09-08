@@ -1,6 +1,8 @@
 import React from 'react';
 import { graphql } from 'gatsby';
 import { MDXRenderer } from 'gatsby-plugin-mdx';
+import { camelCase } from 'change-case';
+import { Layout } from '../components/layout';
 
 const installation = ({ package: p }) =>
   `npm install ${p}
@@ -10,19 +12,22 @@ yarn add ${p}`;
 const ComponentPage = ({ data, pageContext }) => {
   const { frontmatter } = data.usage;
   return (
-    <div>
-      <h2>{frontmatter.name}</h2>
-      <h3>Use it</h3>
-      <pre>
-        import {'{'} {frontmatter.name} {'}'} from "{frontmatter.package}";
-      </pre>
-      <h3>Installation</h3>
-      {/* prettier-ignore */}
-      <pre>
+    <Layout>
+      <div>
+        <h2>{frontmatter.name}</h2>
+        <h3>Use it</h3>
+        <pre>
+          import {'{'} {camelCase(frontmatter.name)} {'}'} from "
+          {frontmatter.package}";
+        </pre>
+        <h3>Installation</h3>
+        {/* prettier-ignore */}
+        <pre>
         {installation(frontmatter)}
       </pre>
-      <MDXRenderer>{data.usage.body}</MDXRenderer>
-    </div>
+        <MDXRenderer>{data.usage.body}</MDXRenderer>
+      </div>
+    </Layout>
   );
 };
 
