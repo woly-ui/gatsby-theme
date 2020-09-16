@@ -14,10 +14,7 @@
     "build": "gatsby build"
   },
   "dependencies": {
-    "@mdx-js/mdx": "^1.6.17",
-    "@mdx-js/react": "^1.6.17",
     "gatsby": "^2.24.47",
-    "gatsby-plugin-mdx": "^1.2.40",
     "gatsby-theme-woly": "^0.2.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
