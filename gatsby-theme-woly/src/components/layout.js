@@ -24,10 +24,19 @@ export const Layout = ({ children }) => {
     }
   `);
 
+  const [isMobileMenuVisibile, setVisibility] = React.useState(false);
+  const onClick = React.useCallback(() => {
+    setVisibility(!isMobileMenuVisibile);
+  }, [isMobileMenuVisibile]);
+
   return (
     <Container>
-      <ComponentsMenu menu={createMapping(data)} />
-      <Main>{children}</Main>
+      <ComponentsMenu
+        menu={createMapping(data)}
+        isVisible={isMobileMenuVisibile}
+        buttonClicked={onClick}
+      />
+      <Main isVisible={!isMobileMenuVisibile}>{children}</Main>
     </Container>
   );
 };
@@ -56,9 +65,17 @@ function createMapping(data) {
 const Container = styled.div`
   display: flex;
   flex-wrap: nowrap;
+  font-family: 'Roboto', sans-serif;
 `;
 
 const Main = styled.main`
   display: flex;
   flex-direction: column;
+  padding: 40px 0 0 240px;
+  box-sizing: border-box;
+  width: 100%;
+  @media screen and (max-width: 768px) {
+    padding: 40px 0 0 15px;
+    display: ${({ isVisible }) => (isVisible ? 'flex' : 'none')};
+  }
 `;
