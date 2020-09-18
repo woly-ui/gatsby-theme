@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "gatsby": "^2.24.47",
-    "gatsby-theme-woly": "^0.2.0",
+    "gatsby-theme-woly": "^0.3.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
   }

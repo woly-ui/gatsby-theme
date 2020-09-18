@@ -10,7 +10,7 @@ const installation = ({ package: p }) =>
 yarn add ${p}`;
 
 const ComponentPage = ({ data, pageContext }) => {
-  const { frontmatter } = data.usage;
+  const { frontmatter, body } = data.usage;
   return (
     <Layout>
       <div>
@@ -23,9 +23,9 @@ const ComponentPage = ({ data, pageContext }) => {
         <h3>Installation</h3>
         {/* prettier-ignore */}
         <pre>
-        {installation(frontmatter)}
-      </pre>
-        <MDXRenderer>{data.usage.body}</MDXRenderer>
+          {installation(frontmatter)}
+        </pre>
+        <MDXRenderer>{body}</MDXRenderer>
       </div>
     </Layout>
   );
