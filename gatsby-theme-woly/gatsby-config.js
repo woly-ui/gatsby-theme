@@ -6,6 +6,7 @@ module.exports = (themeOptions) => {
     plugins: [
       'gatsby-plugin-sitemap',
       'gatsby-plugin-react-helmet',
+      `gatsby-plugin-mdx`,
       {
         resolve: 'gatsby-plugin-styled-components',
         options: { displayName: IS_DEV },
@@ -16,9 +17,6 @@ module.exports = (themeOptions) => {
           name: `usages`,
           path: themeOptions.components,
         },
-      },
-      {
-        resolve: `gatsby-plugin-mdx`,
       },
     ],
   };
