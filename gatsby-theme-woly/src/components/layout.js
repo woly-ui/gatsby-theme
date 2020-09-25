@@ -21,6 +21,9 @@ export const Layout = ({ children }) => {
           }
         }
       }
+      site {
+        pathPrefix
+      }
     }
   `);
 
@@ -47,10 +50,11 @@ function createMapping(data) {
     if (!packages[component.meta.package]) {
       packages[component.meta.package] = [];
     }
+    const prefix = data.pathPrefix || '';
 
     packages[component.meta.package].push({
       ...component.meta,
-      path: paths.componentUsage(component.meta),
+      path: prefix + paths.componentUsage(component.meta),
       id: component.id,
       title: camelCase(component.meta.name),
     });
