@@ -4,6 +4,5 @@ module.exports = {
       resolve: `gatsby-theme-woly`,
       options: { components: `src` },
     },
-    `gatsby-plugin-mdx`,
   ],
 };

@@ -78,6 +78,7 @@ const Main = styled.main`
   padding: 40px 0 0 240px;
   box-sizing: border-box;
   width: 100%;
+  max-width: 1200px;
   @media screen and (max-width: 768px) {
     padding: 40px 0 0 15px;
     display: ${({ isVisible }) => (isVisible ? 'flex' : 'none')};
