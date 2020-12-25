@@ -1,7 +1,7 @@
 import React from 'react';
 import { graphql } from 'gatsby';
 import { MDXRenderer } from 'gatsby-plugin-mdx';
-import { camelCase } from 'change-case';
+import { pascalCase } from 'change-case';
 import { Layout } from '../components/layout';
 
 const installation = ({ package: p }) =>
@@ -17,7 +17,7 @@ const ComponentPage = ({ data, pageContext }) => {
         <h2>{frontmatter.name}</h2>
         <h3>Use it</h3>
         <pre>
-          import {'{'} {camelCase(frontmatter.name)} {'}'} from "
+          import {'{'} {pascalCase(frontmatter.name)} {'}'} from "
           {frontmatter.package}";
         </pre>
         <h3>Installation</h3>
