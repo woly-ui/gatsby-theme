@@ -6,7 +6,8 @@ package: 'woly'
 
 import * as button from './index';
 import { New } from './new';
-import { ButtonImage, Example } from './example';
+import { ButtonImage } from './example';
+import { Frame } from 'gatsby-theme-woly/src/components/frame';
 
 Button allow users to take actions, and make choices, with a single tap.
 
@@ -22,10 +23,10 @@ const Example = () => (
 );
 ```
 
-<Example>
+<Frame>
   <New />
   <button.Base />
-</Example>
+</Frame>
 
 ### Kinds
 
