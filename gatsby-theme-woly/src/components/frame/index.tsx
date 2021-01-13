@@ -1,7 +1,8 @@
 /**
  * Creates iFrame with react components content inside .mdx docs
- * use it li
-*/
+ * docs: doc.mdx
+ */
+
 import * as React from 'react';
 import styled from 'styled-components';
 import { createPortal } from 'react-dom';
