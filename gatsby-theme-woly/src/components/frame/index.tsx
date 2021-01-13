@@ -1,6 +1,6 @@
 /**
  * Creates iFrame with react components content inside .mdx docs
- * docs: doc.mdx
+ * usage: usage.mdx
  */
 
 import * as React from 'react';
