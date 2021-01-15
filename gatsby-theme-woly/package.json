@@ -42,8 +42,6 @@
   "devDependencies": {
     "babel-plugin-styled-components": "^1.11.1",
     "gatsby": "^2.24.47",
-    "gatsby-plugin-sharp": "^2.6.38",
-    "gatsby-transformer-sharp": "^2.5.16",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "styled-components": "^5.1.1"

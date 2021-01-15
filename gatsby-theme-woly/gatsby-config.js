@@ -19,8 +19,6 @@ module.exports = (themeOptions) => {
           remarkPlugins: [require('./plugins/remark-plugin.js')],
         },
       },
-      `gatsby-plugin-sharp`,
-      `gatsby-transformer-sharp`,
       {
         resolve: 'gatsby-plugin-styled-components',
         options: { displayName: IS_DEV },
