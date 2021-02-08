@@ -1,0 +1,8 @@
+'@theme':
+  - gatsby-theme-woly/**/*
+
+'@example':
+  - example/**/*
+
+'ci':
+  - .github/**/*
