@@ -36,10 +36,11 @@ jobs:
           version: ${{ steps.version.outputs.tag }}
           package: 'gatsby-theme-woly/'
 
-      - name: Publish woly to NPM
-        uses: primer/publish@3.0.0
-        with:
-          dir: 'gatsby-theme-woly'
+      - name: Create NPM config
+        run: npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+
+      - name: Publish theme to NPM
+        working-directory: ./gatsby-theme-woly
+        run: npm publish
