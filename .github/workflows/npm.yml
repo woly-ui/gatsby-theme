@@ -1,0 +1,73 @@
+name: Publish Package CI
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    name: build and test
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: ['14']
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+
+      - name: Set Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
+
+      # - name: Lint
+      #   run: yarn lint
+
+      - name: Build
+        run: yarn build
+
+      # - name: Test
+      #   run: yarn test
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+
+      - name: Set Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14'
+
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Extract version
+        id: version
+        uses: olegtarasov/get-tag@v2.1
+        with:
+          tagRegex: 'v(.*)'
+
+      - name: Set version from release
+        uses: reedyuk/npm-version@1.0.1
+        with:
+          version: ${{ steps.version.outputs.tag }}
+          package: 'gatsby-theme-woly/'
+
+      - name: Publish woly to NPM
+        uses: primer/publish@3.0.0
+        with:
+          dir: 'gatsby-theme-woly'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
