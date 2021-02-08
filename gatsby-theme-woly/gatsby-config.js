@@ -4,7 +4,7 @@ module.exports = (themeOptions) => {
 
   return {
     plugins: [
-      'gatsby-plugin-sitemap',
+      // 'gatsby-plugin-sitemap',
       'gatsby-plugin-react-helmet',
       {
         resolve: `gatsby-plugin-mdx`,
