@@ -18,7 +18,7 @@
     "@types/react-dom": "^17.0.0",
     "@types/styled-components": "^5.1.7",
     "gatsby": "^2.32.3",
-    "gatsby-theme-woly": "^0.6.0",
+    "gatsby-theme-woly": "0.0.0-real-version-will-be-set-at-ci",
     "react": "16.14.0",
     "react-dom": "16.14.0",
     "styled-components": "^5.2.1"
