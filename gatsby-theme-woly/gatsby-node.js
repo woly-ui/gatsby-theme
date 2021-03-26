@@ -7,6 +7,21 @@
 const pathsPath = require.resolve('./src/paths.js');
 const { paths } = require(pathsPath);
 
+try {
+  require.resolve(`babel-plugin-extract-react-types`);
+} catch (e) {
+  throw new Error(
+    `'babel-plugin-extract-react-types' is not installed which is needed by 'gatsby-theme-woly'`,
+  );
+}
+
+exports.onCreateBabelConfig = ({ stage, actions }, pluginOptions) => {
+  actions.setBabelPlugin({
+    name: `babel-plugin-extract-react-types`,
+    stage,
+  });
+};
+
 exports.createPages = async (gatsby) => {
   await createUsagePages(gatsby);
 };
