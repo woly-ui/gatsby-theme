@@ -1,7 +1,7 @@
 const visit = require('unist-util-visit');
 
 module.exports = (options) => {
-  console.log('REMARK PLUGIN', options);
+  // console.log('REMARK PLUGIN', options);
 
   function transformer(tree) {
     const codes = [];

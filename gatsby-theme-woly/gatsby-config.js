@@ -1,6 +1,6 @@
 module.exports = (themeOptions) => {
   const IS_DEV = process.env.NODE_ENV !== 'production';
-  console.log('WOLY THEME OPTIONS', themeOptions);
+  // console.log('WOLY THEME OPTIONS', themeOptions);
 
   return {
     plugins: [
