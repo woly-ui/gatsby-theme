@@ -15,16 +15,15 @@ const ComponentPage = ({ data, pageContext }) => {
     <Layout>
       <div>
         <h2>{frontmatter.name}</h2>
-        <h3>Use it</h3>
         <pre>
           import {'{'} {pascalCase(frontmatter.name)} {'}'} from "
           {frontmatter.package}";
         </pre>
-        <h3>Installation</h3>
+        {/* <h3>Installation</h3> */}
         {/* prettier-ignore */}
-        <pre>
+        {/* <pre>
           {installation(frontmatter)}
-        </pre>
+        </pre> */}
         <MDXRenderer>{body}</MDXRenderer>
       </div>
     </Layout>
