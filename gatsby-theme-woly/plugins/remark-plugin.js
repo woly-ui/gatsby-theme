@@ -19,8 +19,12 @@ module.exports = (options) => {
       });
     });
 
+    // When new element added to AST list, other elements is moved down
+    // Absolute index of each element in `codes` has incorrect `at` position
+    let shift = 0;
     codes.forEach(({ at, node, parent }) => {
-      parent.children.splice(at + 1, 0, node);
+      parent.children.splice(at + 1 + shift, 0, node);
+      shift++;
     });
 
     delete codes;
