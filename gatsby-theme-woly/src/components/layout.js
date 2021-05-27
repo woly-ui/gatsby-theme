@@ -5,6 +5,7 @@ import styled from 'styled-components';
 
 import { ComponentsMenu } from './components-menu';
 import { paths } from '../paths';
+import { mapComponentName } from '../lib/constants';
 
 export const Layout = ({ children }) => {
   const data = useStaticQuery(graphql`
@@ -52,12 +53,14 @@ function createMapping(data) {
     }
     const prefix = data.pathPrefix || '';
 
-    packages[component.meta.package].push({
-      ...component.meta,
-      path: prefix + paths.componentUsage(component.meta),
-      id: component.id,
-      title: camelCase(component.meta.name),
-    });
+    if (component.meta.category !== mapComponentName) {
+      packages[component.meta.package].push({
+        ...component.meta,
+        path: prefix + paths.componentUsage(component.meta),
+        id: component.id,
+        title: camelCase(component.meta.name),
+      });
+    }
   }
 
   return Object.keys(packages).reduce((list, name) => {
