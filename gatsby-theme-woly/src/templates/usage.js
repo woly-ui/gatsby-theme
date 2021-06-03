@@ -3,7 +3,7 @@ import { graphql } from 'gatsby';
 import { MDXRenderer } from 'gatsby-plugin-mdx';
 import { pascalCase } from 'change-case';
 import { Layout } from '../components/layout';
-import { mapComponentName } from '../lib/constants';
+import { isHiddenCategory } from '../lib/guards';
 
 const installation = ({ package: p }) =>
   `npm install ${p}
@@ -12,7 +12,7 @@ yarn add ${p}`;
 
 const ComponentPage = ({ data, pageContext }) => {
   const { frontmatter, body } = data.usage;
-  if (frontmatter.category === mapComponentName) {
+  if (isHiddenCategory(frontmatter.category)) {
     return <MDXRenderer>{body}</MDXRenderer>;
   }
   return (
