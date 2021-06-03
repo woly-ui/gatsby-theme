@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 import { ComponentsMenu } from './components-menu';
 import { paths } from '../paths';
-import { mapComponentName } from '../lib/constants';
+import { isHiddenCategory } from '../lib/guards';
 
 export const Layout = ({ children }) => {
   const data = useStaticQuery(graphql`
@@ -53,7 +53,7 @@ function createMapping(data) {
     }
     const prefix = data.pathPrefix || '';
 
-    if (component.meta.category !== mapComponentName) {
+    if (!isHiddenCategory(component.meta.category)) {
       packages[component.meta.package].push({
         ...component.meta,
         path: prefix + paths.componentUsage(component.meta),
