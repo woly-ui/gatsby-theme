@@ -21,7 +21,6 @@ export const ComponentsMenu = ({ menu, isVisible, buttonClicked }) => {
     <>
       <BurgerButton buttonClicked={buttonClicked} />
       <Block isVisible={isVisible}>
-        <h3>Components</h3>
         {menu.map((group) => (
           <Group key={group.name} group={group} activeMenu={activeMenu} />
         ))}
@@ -34,13 +33,26 @@ const Group = ({ group, activeMenu }) => (
   <div>
     <MenuHeader>{group.name}</MenuHeader>
     <MenuItems>
-      {group.components.map((com) => (
-        <MenuItem key={com.id} active={com.name === activeMenu ? true : false}>
-          <Link to={com.path}>{com.name}</Link>
-        </MenuItem>
+      {Object.keys(group.components).map((key) => (
+        <GroupItems
+          name={key}
+          groupItems={group.components[key]}
+          activeMenu={activeMenu}
+        />
       ))}
     </MenuItems>
   </div>
+);
+
+export const GroupItems = ({ name, groupItems, activeMenu }) => (
+  <>
+    <CategoryHead>{name}</CategoryHead>
+    {groupItems.map((com) => (
+      <MenuItem key={com.id} active={com.name === activeMenu}>
+        <Link to={com.path}>{com.name}</Link>
+      </MenuItem>
+    ))}
+  </>
 );
 
 export const Burger = styled.div`
@@ -129,11 +141,17 @@ const Block = styled.nav`
   }
 `;
 
-export const MenuHeader = styled.h4`
+export const MenuHeader = styled.h3`
   text-transform: capitalize;
   font-weight: 300;
   border-bottom: 1px solid var(--base);
-  padding: 20px 0 10px 0.3rem;
+  padding: 0 0 10px 0;
+  margin-bottom: 0px;
+  margin-top: 20px;
+`;
+
+export const CategoryHead = styled.h4`
+  padding: 0.5rem 5rem 0.5rem 0.5rem;
   margin-bottom: 0px;
 `;
 
