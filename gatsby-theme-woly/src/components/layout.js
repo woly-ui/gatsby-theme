@@ -49,12 +49,17 @@ function createMapping(data) {
   const packages = {};
   for (const component of data.mdx.components) {
     if (!packages[component.meta.package]) {
-      packages[component.meta.package] = [];
+      packages[component.meta.package] = {};
     }
+
+    if (!packages[component.meta.package][component.meta.category]) {
+      packages[component.meta.package][component.meta.category] = [];
+    }
+
     const prefix = data.pathPrefix || '';
 
     if (!isHiddenCategory(component.meta.category)) {
-      packages[component.meta.package].push({
+      packages[component.meta.package][component.meta.category].push({
         ...component.meta,
         path: prefix + paths.componentUsage(component.meta),
         id: component.id,
