@@ -48,7 +48,7 @@ export const GroupItems = ({ name, groupItems, activeMenu }) => (
   <>
     <CategoryHead>{name}</CategoryHead>
     {groupItems.map((com) => (
-      <MenuItem key={com.id} active={com.name === activeMenu ? true : false}>
+      <MenuItem key={com.id} active={com.name === activeMenu}>
         <Link to={com.path}>{com.name}</Link>
       </MenuItem>
     ))}
