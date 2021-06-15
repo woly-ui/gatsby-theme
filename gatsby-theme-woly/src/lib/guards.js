@@ -9,7 +9,7 @@ const hiddenCategory = new RegExp(
 
 export const isHiddenCategory = (category) => {
   if (typeof category !== 'string') {
-    throw new Error('Category is not a string');
+    console.log('Category is not a string or not provided');
   }
   return hiddenCategory.test(category);
 };
