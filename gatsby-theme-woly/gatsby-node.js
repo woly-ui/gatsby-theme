@@ -6,6 +6,7 @@
 
 const pathsPath = require.resolve('./src/paths.js');
 const { paths } = require(pathsPath);
+const path = require('path');
 
 try {
   require.resolve(`babel-plugin-extract-react-types`);
@@ -37,8 +38,8 @@ async function createUsagePages({ actions, graphql, reporter }) {
             name
             package
           }
-          tableOfContents
           fileAbsolutePath
+          body
         }
       }
     }
@@ -51,12 +52,33 @@ async function createUsagePages({ actions, graphql, reporter }) {
 
   const component = require.resolve('./src/templates/usage.js');
 
-  result.data.usages.nodes.forEach(({ frontmatter, id }) => {
+  const mdxGroups = result.data.usages.nodes.reduce((all, node) => {
+    const { frontmatter, fileAbsolutePath, body } = node;
+    const key = `${Object.values(frontmatter).join('-')}`;
+
+    if (!all[key])
+      all[key] = {
+        ...frontmatter,
+        nodes: [],
+      };
+
+    all[key].nodes.push({
+      type: path.basename(fileAbsolutePath, '.mdx'),
+      body,
+    });
+
+    return all;
+  }, {});
+
+  Object.values(mdxGroups).forEach((mdxGroup) => {
     actions.createPage({
-      path: paths.componentUsage(frontmatter),
+      path: paths.componentUsage({
+        package: mdxGroup.package,
+        name: mdxGroup.name,
+      }),
       component,
       context: {
-        pageID: id,
+        ...mdxGroup,
       },
     });
   });

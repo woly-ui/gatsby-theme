@@ -1,50 +1,63 @@
 import React from 'react';
 import { graphql } from 'gatsby';
 import { MDXRenderer } from 'gatsby-plugin-mdx';
-import { pascalCase } from 'change-case';
 import { Layout } from '../components/layout';
-import { isHiddenCategory } from '../lib/guards';
+import { pageSections } from '../lib/constants';
+import { Tabs } from '../components/tabs';
 
 const installation = ({ package: p }) =>
   `npm install ${p}
 # or
 yarn add ${p}`;
 
-const ComponentPage = ({ data, pageContext }) => {
-  const { frontmatter, body } = data.usage;
-  if (isHiddenCategory(frontmatter.category)) {
-    return <MDXRenderer>{body}</MDXRenderer>;
-  }
+const getTabData = ({ nodes, mapper, meta }) => {
+  return mapper.reduce((all, { code, label, renderHeader }) => {
+    const page = nodes.find((node) => node.type === code);
+
+    if (page) {
+      all.push({
+        label,
+        content: <MDXRenderer>{page.body}</MDXRenderer>,
+        header: renderHeader ? renderHeader(meta) : null,
+      });
+    }
+
+    return all;
+  }, []);
+};
+
+const ComponentPage = ({ pageContext }) => {
+  const { nodes, ...meta } = pageContext;
+
+  const tabData = getTabData({ nodes, mapper: pageSections, meta });
+
   return (
     <Layout>
       <div>
-        <h2>{frontmatter.name}</h2>
-        <pre>
-          import {'{'} {pascalCase(frontmatter.name)} {'}'} from "
-          {frontmatter.package}";
-        </pre>
+        <h2>{meta.name}</h2>
+
         {/* <h3>Installation</h3> */}
         {/* prettier-ignore */}
         {/* <pre>
           {installation(frontmatter)}
         </pre> */}
-        <MDXRenderer>{body}</MDXRenderer>
+        <Tabs data={tabData} />
       </div>
     </Layout>
   );
 };
 
-export const pageQuery = graphql`
-  query($pageID: String!) {
-    usage: mdx(id: { eq: $pageID }) {
-      frontmatter {
-        name
-        package
-        category
-      }
-      body
-    }
-  }
-`;
+// export const pageQuery = graphql`
+//   query($pageID: String!) {
+//     usage: mdx(id: { eq: $pageID }) {
+//       frontmatter {
+//         name
+//         package
+//         category
+//       }
+//       body
+//     }
+//   }
+// `;
 
 export default ComponentPage;

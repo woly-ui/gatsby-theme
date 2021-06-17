@@ -35,6 +35,7 @@ const Group = ({ group, activeMenu }) => (
     <MenuItems>
       {Object.keys(group.components).map((key) => (
         <GroupItems
+          key={key}
           name={key}
           groupItems={group.components[key]}
           activeMenu={activeMenu}

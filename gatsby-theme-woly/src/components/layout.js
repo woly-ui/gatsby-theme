@@ -5,17 +5,17 @@ import styled from 'styled-components';
 
 import { ComponentsMenu } from './components-menu';
 import { paths } from '../paths';
-import { isHiddenCategory } from '../lib/guards';
 
 export const Layout = ({ children }) => {
   const data = useStaticQuery(graphql`
     {
-      mdx: allMdx(
-        sort: { fields: [frontmatter___category, frontmatter___name] }
+      pages: allSitePage(
+        sort: { fields: [context___category, context___name] }
+        filter: { component: { regex: "/usage.js$/g" } }
       ) {
         components: nodes {
           id
-          meta: frontmatter {
+          meta: context {
             category
             name
             package
@@ -47,25 +47,30 @@ export const Layout = ({ children }) => {
 
 function createMapping(data) {
   const packages = {};
-  for (const component of data.mdx.components) {
-    if (!packages[component.meta.package]) {
-      packages[component.meta.package] = {};
+
+  for (const component of data.pages.components) {
+    const {
+      package: packageName,
+      name: componentName,
+      category,
+    } = component.meta;
+
+    if (!packages[packageName]) {
+      packages[packageName] = {};
     }
 
-    if (!packages[component.meta.package][component.meta.category]) {
-      packages[component.meta.package][component.meta.category] = [];
+    if (!packages[packageName][category]) {
+      packages[packageName][category] = [];
     }
 
     const prefix = data.pathPrefix || '';
 
-    if (!isHiddenCategory(component.meta.category)) {
-      packages[component.meta.package][component.meta.category].push({
-        ...component.meta,
-        path: prefix + paths.componentUsage(component.meta),
-        id: component.id,
-        title: camelCase(component.meta.name),
-      });
-    }
+    packages[packageName][category].push({
+      ...component.meta,
+      path: prefix + paths.componentUsage(component.meta),
+      id: component.id,
+      title: camelCase(componentName),
+    });
   }
 
   return Object.keys(packages).reduce((list, name) => {

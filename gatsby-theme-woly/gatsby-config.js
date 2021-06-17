@@ -30,6 +30,13 @@ module.exports = (themeOptions) => {
           path: themeOptions.components,
         },
       },
+      {
+        resolve: `gatsby-plugin-page-creator`,
+        options: {
+          path: themeOptions.components,
+          ignore: [`**/!(*.test).*`],
+        },
+      },
     ],
   };
 };
