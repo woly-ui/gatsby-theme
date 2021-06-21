@@ -6,6 +6,7 @@
 
 const pathsPath = require.resolve('./src/paths.js');
 const { paths } = require(pathsPath);
+const fs = require('fs');
 const path = require('path');
 
 try {
@@ -33,11 +34,6 @@ async function createUsagePages({ actions, graphql, reporter }) {
       usages: allMdx {
         nodes {
           id
-          frontmatter {
-            category
-            name
-            package
-          }
           fileAbsolutePath
           body
         }
@@ -53,12 +49,19 @@ async function createUsagePages({ actions, graphql, reporter }) {
   const component = require.resolve('./src/templates/usage.js');
 
   const mdxGroups = result.data.usages.nodes.reduce((all, node) => {
-    const { frontmatter, fileAbsolutePath, body } = node;
-    const key = `${Object.values(frontmatter).join('-')}`;
+    const { body, fileAbsolutePath } = node;
+
+    const [_, name, category, packageName] = node.fileAbsolutePath
+      .split('/')
+      .reverse();
+
+    const key = `${packageName}-${category}-${name}`;
 
     if (!all[key])
       all[key] = {
-        ...frontmatter,
+        package: packageName,
+        category,
+        name,
         nodes: [],
       };
 
@@ -72,8 +75,9 @@ async function createUsagePages({ actions, graphql, reporter }) {
 
   Object.values(mdxGroups).forEach((mdxGroup) => {
     actions.createPage({
-      path: paths.componentUsage({
+      path: paths.componentPage({
         package: mdxGroup.package,
+        category: mdxGroup.category,
         name: mdxGroup.name,
       }),
       component,
@@ -82,4 +86,44 @@ async function createUsagePages({ actions, graphql, reporter }) {
       },
     });
   });
+}
+
+exports.onPostBuild = async (gatsby) => {
+  await findScreenshotTestingConfigs(gatsby);
+};
+
+async function findScreenshotTestingConfigs({ graphql, reporter }) {
+  const result = await graphql(`
+    {
+      configs: allFile(filter: { name: { eq: "config" } }) {
+        nodes {
+          relativePath
+        }
+      }
+    }
+  `);
+
+  if (result.errors) {
+    reporter.panicOnBuild(`Error while running GraphQL query`);
+    throw result.errors;
+  }
+
+  const configPaths = result.data.configs.nodes.map(({ relativePath }) => {
+    const [name, category, packageName] = relativePath
+      .replace('/__screenshot-test__/config.js', '')
+      .split('/')
+      .reverse();
+
+    return {
+      path: relativePath,
+      name,
+      category,
+      package: packageName,
+    };
+  });
+
+  fs.writeFileSync(
+    `./public/screenshot-test-config-paths.json`,
+    JSON.stringify(configPaths, null, 2),
+  );
 }

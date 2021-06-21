@@ -34,7 +34,7 @@ module.exports = (themeOptions) => {
         resolve: `gatsby-plugin-page-creator`,
         options: {
           path: themeOptions.components,
-          ignore: [`**/!(*.test).*`],
+          ignore: ['**/*.(js|ts|jsx)'],
         },
       },
     ],

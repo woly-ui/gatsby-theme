@@ -1,4 +1,5 @@
 const paths = {
-  componentUsage: ({ package: p, name }) => `/package/${p}/component/${name}`,
+  componentPage: ({ package: p, category, name }) =>
+    `/${p}/${category}/${name}`,
 };
 module.exports = { paths };
