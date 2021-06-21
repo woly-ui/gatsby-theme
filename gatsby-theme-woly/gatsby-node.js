@@ -100,7 +100,7 @@ async function findScreenshotTestingConfigs({ graphql, reporter }) {
   });
 
   fs.writeFileSync(
-    `./public/screenshot-test-config-paths.json`,
+    `./public/screenshot-test-configs.json`,
     JSON.stringify(configPaths, null, 2),
   );
 }
