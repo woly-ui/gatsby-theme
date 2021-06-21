@@ -1,63 +1,43 @@
 import React from 'react';
 import { graphql } from 'gatsby';
 import { MDXRenderer } from 'gatsby-plugin-mdx';
+import { pascalCase } from 'change-case';
 import { Layout } from '../components/layout';
-import { pageSections } from '../lib/constants';
-import { Tabs } from '../components/tabs';
 
 const installation = ({ package: p }) =>
   `npm install ${p}
 # or
 yarn add ${p}`;
 
-const getTabData = ({ nodes, mapper, meta }) => {
-  return mapper.reduce((all, { code, label, renderHeader }) => {
-    const page = nodes.find((node) => node.type === code);
-
-    if (page) {
-      all.push({
-        label,
-        content: <MDXRenderer>{page.body}</MDXRenderer>,
-        header: renderHeader ? renderHeader(meta) : null,
-      });
-    }
-
-    return all;
-  }, []);
-};
-
-const ComponentPage = ({ pageContext }) => {
-  const { nodes, ...meta } = pageContext;
-
-  const tabData = getTabData({ nodes, mapper: pageSections, meta });
+const ComponentPage = ({ data, pageContext }) => {
+  const { body } = data.usage;
+  const { name, category, package: packageName } = pageContext;
 
   return (
     <Layout>
       <div>
-        <h2>{meta.name}</h2>
-
+        <h2>{name}</h2>
+        <pre>
+          import {'{'} {pascalCase(name)} {'}'} from "{packageName}";
+        </pre>
         {/* <h3>Installation</h3> */}
         {/* prettier-ignore */}
         {/* <pre>
           {installation(frontmatter)}
         </pre> */}
-        <Tabs data={tabData} />
+        <MDXRenderer>{body}</MDXRenderer>
       </div>
     </Layout>
   );
 };
 
-// export const pageQuery = graphql`
-//   query($pageID: String!) {
-//     usage: mdx(id: { eq: $pageID }) {
-//       frontmatter {
-//         name
-//         package
-//         category
-//       }
-//       body
-//     }
-//   }
-// `;
+export const pageQuery = graphql`
+  query($pageID: String!) {
+    usage: mdx(id: { eq: $pageID }) {
+      fileAbsolutePath
+      body
+    }
+  }
+`;
 
 export default ComponentPage;

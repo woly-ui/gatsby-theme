@@ -7,7 +7,6 @@
 const pathsPath = require.resolve('./src/paths.js');
 const { paths } = require(pathsPath);
 const fs = require('fs');
-const path = require('path');
 
 try {
   require.resolve(`babel-plugin-extract-react-types`);
@@ -35,7 +34,6 @@ async function createUsagePages({ actions, graphql, reporter }) {
         nodes {
           id
           fileAbsolutePath
-          body
         }
       }
     }
@@ -48,41 +46,20 @@ async function createUsagePages({ actions, graphql, reporter }) {
 
   const component = require.resolve('./src/templates/usage.js');
 
-  const mdxGroups = result.data.usages.nodes.reduce((all, node) => {
-    const { body, fileAbsolutePath } = node;
-
-    const [_, name, category, packageName] = node.fileAbsolutePath
+  result.data.usages.nodes.forEach(({ id, fileAbsolutePath }) => {
+    const [_, name, category, packageName] = fileAbsolutePath
       .split('/')
       .reverse();
 
-    const key = `${packageName}-${category}-${name}`;
-
-    if (!all[key])
-      all[key] = {
-        package: packageName,
-        category,
-        name,
-        nodes: [],
-      };
-
-    all[key].nodes.push({
-      type: path.basename(fileAbsolutePath, '.mdx'),
-      body,
-    });
-
-    return all;
-  }, {});
-
-  Object.values(mdxGroups).forEach((mdxGroup) => {
     actions.createPage({
-      path: paths.componentPage({
-        package: mdxGroup.package,
-        category: mdxGroup.category,
-        name: mdxGroup.name,
-      }),
+      id,
+      path: paths.componentPage({ package: packageName, category, name }),
       component,
       context: {
-        ...mdxGroup,
+        pageID: id,
+        name,
+        category,
+        package: packageName,
       },
     });
   });

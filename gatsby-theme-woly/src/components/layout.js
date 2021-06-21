@@ -9,10 +9,17 @@ import { paths } from '../paths';
 export const Layout = ({ children }) => {
   const data = useStaticQuery(graphql`
     {
-      pages: allMdx {
+      pages: allSitePage(
+        sort: { fields: [context___category, context___name] }
+        filter: { component: { regex: "/usage.js$/g" } }
+      ) {
         components: nodes {
           id
-          fileAbsolutePath
+          meta: context {
+            category
+            name
+            package
+          }
         }
       }
       site {
@@ -22,7 +29,6 @@ export const Layout = ({ children }) => {
   `);
 
   const [isMobileMenuVisibile, setVisibility] = React.useState(false);
-
   const onClick = React.useCallback(() => {
     setVisibility(!isMobileMenuVisibile);
   }, [isMobileMenuVisibile]);
@@ -43,9 +49,11 @@ function createMapping(data) {
   const packages = {};
 
   for (const component of data.pages.components) {
-    const [_, name, category, packageName] = component.fileAbsolutePath
-      .split('/')
-      .reverse();
+    const {
+      package: packageName,
+      name: componentName,
+      category,
+    } = component.meta;
 
     if (!packages[packageName]) {
       packages[packageName] = {};
@@ -57,20 +65,12 @@ function createMapping(data) {
 
     const prefix = data.pathPrefix || '';
 
-    const hasSameComponent = packages[packageName][category].find(
-      (component) => component.name === name,
-    );
-
-    if (!hasSameComponent) {
-      packages[packageName][category].push({
-        id: component.id,
-        name,
-        category,
-        package: packageName,
-        path: prefix + paths.componentPage({ package: packageName, name }),
-        title: camelCase(name),
-      });
-    }
+    packages[packageName][category].push({
+      ...component.meta,
+      path: prefix + paths.componentPage(component.meta),
+      id: component.id,
+      title: camelCase(componentName),
+    });
   }
 
   return Object.keys(packages).reduce((list, name) => {
