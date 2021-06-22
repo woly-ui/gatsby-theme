@@ -6,6 +6,7 @@
 
 const pathsPath = require.resolve('./src/paths.js');
 const { paths } = require(pathsPath);
+const fs = require('fs');
 
 try {
   require.resolve(`babel-plugin-extract-react-types`);
@@ -32,12 +33,6 @@ async function createUsagePages({ actions, graphql, reporter }) {
       usages: allMdx {
         nodes {
           id
-          frontmatter {
-            category
-            name
-            package
-          }
-          tableOfContents
           fileAbsolutePath
         }
       }
@@ -51,13 +46,61 @@ async function createUsagePages({ actions, graphql, reporter }) {
 
   const component = require.resolve('./src/templates/usage.js');
 
-  result.data.usages.nodes.forEach(({ frontmatter, id }) => {
+  result.data.usages.nodes.forEach(({ id, fileAbsolutePath }) => {
+    const [_, name, category, packageName] = fileAbsolutePath
+      .split('/')
+      .reverse();
+
     actions.createPage({
-      path: paths.componentUsage(frontmatter),
+      id,
+      path: paths.componentPage({ package: packageName, category, name }),
       component,
       context: {
         pageID: id,
+        name,
+        category,
+        package: packageName,
       },
     });
   });
+}
+
+exports.onPostBuild = async (gatsby) => {
+  await findScreenshotTestingConfigs(gatsby);
+};
+
+async function findScreenshotTestingConfigs({ graphql, reporter }) {
+  const result = await graphql(`
+    {
+      configs: allFile(filter: { name: { eq: "config" } }) {
+        nodes {
+          relativePath
+        }
+      }
+    }
+  `);
+
+  if (result.errors) {
+    reporter.panicOnBuild(`Error while running GraphQL query`);
+    throw result.errors;
+  }
+
+  const configPaths = result.data.configs.nodes.map(({ relativePath }) => {
+    const [name, category, packageName] = relativePath
+      .replace('/__screenshot-test__/config.js', '')
+      .split('/')
+      .reverse();
+
+    return {
+      path: relativePath,
+      name,
+      category,
+      package: packageName,
+    };
+  });
+
+  fs.writeFileSync(
+    `./public/screenshot-test-configs.json`,
+    JSON.stringify(configPaths, null, 2),
+  );
 }

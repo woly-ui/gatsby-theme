@@ -3,7 +3,6 @@ import { graphql } from 'gatsby';
 import { MDXRenderer } from 'gatsby-plugin-mdx';
 import { pascalCase } from 'change-case';
 import { Layout } from '../components/layout';
-import { isHiddenCategory } from '../lib/guards';
 
 const installation = ({ package: p }) =>
   `npm install ${p}
@@ -11,17 +10,15 @@ const installation = ({ package: p }) =>
 yarn add ${p}`;
 
 const ComponentPage = ({ data, pageContext }) => {
-  const { frontmatter, body } = data.usage;
-  if (isHiddenCategory(frontmatter.category)) {
-    return <MDXRenderer>{body}</MDXRenderer>;
-  }
+  const { body } = data.usage;
+  const { name, category, package: packageName } = pageContext;
+
   return (
     <Layout>
       <div>
-        <h2>{frontmatter.name}</h2>
+        <h2>{name}</h2>
         <pre>
-          import {'{'} {pascalCase(frontmatter.name)} {'}'} from "
-          {frontmatter.package}";
+          import {'{'} {pascalCase(name)} {'}'} from "{packageName}";
         </pre>
         {/* <h3>Installation</h3> */}
         {/* prettier-ignore */}
@@ -37,11 +34,7 @@ const ComponentPage = ({ data, pageContext }) => {
 export const pageQuery = graphql`
   query($pageID: String!) {
     usage: mdx(id: { eq: $pageID }) {
-      frontmatter {
-        name
-        package
-        category
-      }
+      fileAbsolutePath
       body
     }
   }
