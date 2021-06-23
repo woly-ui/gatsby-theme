@@ -40,12 +40,20 @@ export const Tabs = ({ data }) => {
   };
 
   const renderTabContent = () => {
-    return data.map(({ label, meta, content, header }, index) => (
-      <TabContent key={label} data-active={index === activeIndex}>
-        {header?.(meta)}
-        {content}
-      </TabContent>
-    ));
+    const tabContent = data[activeIndex];
+
+    if (tabContent) {
+      const { meta, content, header } = tabContent;
+
+      return (
+        <TabContent>
+          {header?.(meta)}
+          {content}
+        </TabContent>
+      );
+    }
+
+    return null;
   };
 
   return (
@@ -65,7 +73,7 @@ const TabLabels = styled.div`
 `;
 
 const TabLabel = styled.button`
-  padding: 0.8rem 1rem;
+  padding: 9px 15px;
   font-size: inherit;
   font-family: inherit;
   background: none;
@@ -78,6 +86,8 @@ const TabLabel = styled.button`
 `;
 
 const TabContent = styled.div`
+  padding-top: 12px;
+
   &[data-active='false'] {
     display: none;
   }
