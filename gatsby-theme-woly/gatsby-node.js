@@ -33,8 +33,8 @@ async function createUsagePages({ actions, graphql, reporter }) {
     {
       usages: allMdx {
         nodes {
-          id
           fileAbsolutePath
+          body
         }
       }
     }
@@ -48,32 +48,33 @@ async function createUsagePages({ actions, graphql, reporter }) {
   const component = require.resolve('./src/templates/usage.js');
 
   const groupedMdx = result.data.usages.nodes.reduce(
-    (all, { id, fileAbsolutePath }) => {
+    (all, { fileAbsolutePath, body }) => {
       const [filename, name, category, packageName] = fileAbsolutePath
         .split('/')
         .reverse();
 
-      const key = `${packageName}-${category}-${name}`;
+      const id = `${packageName}-${category}-${name}`;
       const type = path.basename(filename, '.mdx');
 
-      if (!all[key]) {
-        all[key] = {
+      if (!all[id]) {
+        all[id] = {
           id,
           name,
           category,
           package: packageName,
-          ids: [],
-          pages: {},
+          pages: [],
         };
       }
 
-      all[key].ids.push(id);
-      all[key].pages[id] = {
-        name,
-        category,
-        package: packageName,
+      all[id].pages.push({
         type,
-      };
+        meta: {
+          name,
+          category,
+          package: packageName,
+        },
+        body,
+      });
 
       return all;
     },
@@ -81,13 +82,12 @@ async function createUsagePages({ actions, graphql, reporter }) {
   );
 
   Object.values(groupedMdx).forEach(
-    ({ id, name, category, package: p, ids, pages }) => {
+    ({ id, name, category, package: p, pages }) => {
       actions.createPage({
         id,
         path: paths.componentPage({ package: p, category, name }),
         component,
         context: {
-          ids,
           package: p,
           category,
           name,
