@@ -3,10 +3,10 @@ const fs = require('fs')
 const path = require('path')
 const crypto = require('crypto')
 
-const TEMP_DIR = path.join(process.cwd(), '.temp/')
+const EXAMPLES_DIR = path.join(process.cwd(), '.temp/examples')
 
-if (!fs.existsSync(TEMP_DIR)){
-  fs.mkdirSync(TEMP_DIR);
+if (!fs.existsSync(EXAMPLES_DIR)){
+  fs.mkdirSync(EXAMPLES_DIR, { recursive: true });
 }
 
 async function digest(message) {
@@ -21,7 +21,7 @@ function generateNextPlaygroundId(content) {
 
 function generatePlaygroundFilePath(id) {
   const fileName = `${id}.tsx`
-  return path.join(TEMP_DIR, fileName)
+  return path.join(EXAMPLES_DIR, fileName)
 }
 
 const REGEXPS = {
@@ -31,7 +31,7 @@ const REGEXPS = {
 
 function createPlaygroundFile({ at, content, file }) {
   const fileDirectory = path.parse(file.history[0]).dir
-  const relativePathFromTemp = path.relative(TEMP_DIR, fileDirectory)
+  const relativePathFromTemp = path.relative(EXAMPLES_DIR, fileDirectory)
 
   let updatedContent = content
 
@@ -44,7 +44,9 @@ function createPlaygroundFile({ at, content, file }) {
     })
   })
 
-  updatedContent = `import React from 'react'\n` + updatedContent
+  if (!updatedContent.includes('import React')) {
+    updatedContent = `import React from 'react'\n` + updatedContent
+  }
 
   fs.writeFileSync(at, updatedContent)
 }

@@ -9,23 +9,8 @@ module.exports = (themeOptions) => {
       {
         resolve: `gatsby-plugin-mdx`,
         options: {
-          gatsbyRemarkPlugins: [
-            {
-              resolve: require.resolve('./plugins/gatsby-plugin.js'),
-              options: {},
-            },
-          ],
           rehypePlugins: [require('./plugins/rehype-plugin.js')],
-          remarkPlugins: [
-            require('./plugins/remark-plugin.js'),
-            {
-              resolve: require.resolve('remark-comments'),
-              options: {
-                beginMarker: '',
-                endMarker: ''
-              }
-            }
-          ],
+          remarkPlugins: [require('./plugins/remark-plugin.js')],
         },
       },
       {
