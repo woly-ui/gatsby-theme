@@ -12404,6 +12404,11 @@ regjsparser@^0.6.4:
   dependencies:
     jsesc "~0.5.0"
 
+remark-comments@^1.2.9:
+  version "1.2.9"
+  resolved "https://registry.yarnpkg.com/remark-comments/-/remark-comments-1.2.9.tgz#9db68a2911b21b60dfad76369d3cfded946970ca"
+  integrity sha512-IxkgOG6mywoS549abonLIJZy9pZ0VETFLzC9rUyDn0gtbviwxTvgwvm+hTkaL2whGbSJn2bKqyZ6AfYaUal2pw==
+
 remark-footnotes@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/remark-footnotes/-/remark-footnotes-2.0.0.tgz#9001c4c2ffebba55695d2dd80ffb8b82f7e6303f"

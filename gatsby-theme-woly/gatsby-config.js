@@ -16,7 +16,16 @@ module.exports = (themeOptions) => {
             },
           ],
           rehypePlugins: [require('./plugins/rehype-plugin.js')],
-          remarkPlugins: [require('./plugins/remark-plugin.js')],
+          remarkPlugins: [
+            require('./plugins/remark-plugin.js'),
+            {
+              resolve: require.resolve('remark-comments'),
+              options: {
+                beginMarker: '',
+                endMarker: ''
+              }
+            }
+          ],
         },
       },
       {

@@ -13,10 +13,18 @@ Button allow users to take actions, and make choices, with a single tap.
 
 First
 
-<Frame>
-  <New />
-  <button.Base>Demooo</button.Base>
-</Frame>
+```tsx playground
+import * as button from './index';
+import { New } from './new';
+import { Frame } from 'gatsby-theme-woly/src/components/frame';
+
+export function Example() {
+  return <Frame>
+    <New />
+    <button.Base>Demooo</button.Base>
+  </Frame>
+}
+```
 
 Second
 

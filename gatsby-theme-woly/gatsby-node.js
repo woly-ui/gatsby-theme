@@ -99,6 +99,8 @@ async function createUsagePages({ actions, graphql, reporter }) {
 }
 
 exports.onPostBuild = async (gatsby) => {
+  const tempPath = path.join(process.cwd(), '.temp/')
+  fs.rmdirSync(tempPath)
   await findScreenshotTestingConfigs(gatsby);
 };
 
