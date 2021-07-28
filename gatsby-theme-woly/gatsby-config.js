@@ -10,7 +10,7 @@ module.exports = (themeOptions) => {
         resolve: `gatsby-plugin-mdx`,
         options: {
           rehypePlugins: [require('./plugins/rehype-plugin.js')],
-          remarkPlugins: [require('./plugins/remark-plugin.js')],
+          remarkPlugins: [require('./plugins/remark-plugin')],
         },
       },
       {

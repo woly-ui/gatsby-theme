@@ -17,11 +17,14 @@ First
 import * as button from './index';
 import { New } from './new';
 import { Frame } from 'gatsby-theme-woly/src/components/frame';
+import { useEffect, useState } from 'react';
 
 export function Example() {
+  const [state, setState] = useState(0)
+
   return <Frame>
     <New />
-    <button.Base>Demooo</button.Base>
+    <button.Base onClick={() => setState(current => current + 1)}>Demooo</button.Base>
   </Frame>
 }
 ```
