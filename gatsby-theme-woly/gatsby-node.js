@@ -8,6 +8,8 @@ const pathsPath = require.resolve('./src/paths.js');
 const { paths } = require(pathsPath);
 const fs = require('fs');
 const path = require('path');
+const { onPreBuild } = require('gatsby/dist/utils/api-node-docs');
+const rimraf = require('rimraf');
 
 try {
   require.resolve(`babel-plugin-extract-react-types`);
@@ -16,6 +18,18 @@ try {
     `'babel-plugin-extract-react-types' is not installed which is needed by 'gatsby-theme-woly'`,
   );
 }
+
+// const EXAMPLES_DIR = path.join(process.cwd(), '.temp/examples')
+//
+// exports.onPreBootstrap = () => {
+//   console.log('CLEAR EXAMPLES')
+//
+//   // clean the old examples from the previous build
+//   rimraf.sync(EXAMPLES_DIR)
+//
+//   // create examples folder (it can be nested, that's why it should be recursive)
+//   fs.mkdirSync(EXAMPLES_DIR, { recursive: true });
+// }
 
 exports.onCreateBabelConfig = ({ stage, actions }, pluginOptions) => {
   actions.setBabelPlugin({

@@ -1,7 +1,4 @@
-import * as button from './index';
-import { New } from './new';
 import { ButtonImage } from './example';
-import { Frame } from 'gatsby-theme-woly/src/components/frame';
 
 Button allow users to take actions, and make choices, with a single tap.
 
@@ -16,32 +13,42 @@ First
 ```tsx playground
 import * as button from './index';
 import { New } from './new';
-import { Frame } from 'gatsby-theme-woly/src/components/frame';
-import { useEffect, useState } from 'react';
 
 export function Example() {
-  const [state, setState] = useState(0)
-
   return <Frame>
     <New />
-    <button.Base onClick={() => setState(current => current + 1)}>Demooo</button.Base>
+    <button.Base>Demooo</button.Base>
   </Frame>
 }
 ```
 
 Second
 
-<Frame>
-  <New />
-  <button.Base />
-</Frame>
+```tsx playground
+import * as button from './index';
+import { New } from './new';
+
+export function Example() {
+  return <Frame>
+    <New />
+    <button.Base />
+  </Frame>
+}
+```
 
 Third
 
-<Frame>
-  <New />
-  <button.Base />
-</Frame>
+```tsx playground
+import * as button from './index';
+import { New } from './new';
+
+export function Example() {
+  return <Frame>
+    <New />
+    <button.Base />
+  </Frame>
+}
+```
 
 ### Kinds
 

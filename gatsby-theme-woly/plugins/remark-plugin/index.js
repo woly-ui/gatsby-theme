@@ -2,8 +2,7 @@ const visit = require('unist-util-visit');
 const fs = require('fs')
 const path = require('path')
 const crypto = require('crypto')
-const rimraf = require('rimraf')
-const parseImports = require('parse-imports')
+const { imports } = require('./imports');
 
 const EXAMPLES_DIR = path.join(process.cwd(), '.temp/examples')
 
@@ -26,59 +25,48 @@ function generatePlaygroundFilePath(id) {
   return path.join(EXAMPLES_DIR, fileName)
 }
 
-const REGEXPS = {
-  import: /(import\s+?(?:[\w*\s{},]*)\s+from\s+?)((?:".*?")|(?:'.*?'))([\s]*?(;|$|))/,
-  importAll: /(import\s+?(?:[\w*\s{},]*)\s+from\s+?)((?:".*?")|(?:'.*?'))([\s]*?(;|$|))/g
-}
+function writePlaygroundFile({ at, content, filePath, options }) {
+  const { examplesGlobalImports = {} } = options
 
-function writePlaygroundFile({ at, content, filePath }) {
   // initial file directory
   const fileDirectory = path.parse(filePath).dir
-
-  console.log(fileDirectory)
 
   // needed to fix the wrong relative imports
   const relativePathFromTemp = path.relative(EXAMPLES_DIR, fileDirectory)
 
-  let updatedContent = content
+  let parsedImports = imports.extract(content)
 
-  // call replace function for each import declaration in source code
-  updatedContent = updatedContent.replace(REGEXPS.importAll, (importString) => {
-    /*
-     * match - full import string
-     * p1 - first import part ("import something from ")
-     * p2 - second import part ("'./path'")
-     * p3 - optional semicolon (";") - we don't need it
-     */
-    return importString.replace(REGEXPS.import, (match, p1, p2) => {
-      // remove quotes
-      const modulePath = p2.slice(1, -1)
+  parsedImports = imports.add({
+    imports: parsedImports,
+    new: {
+      'react': {
+        defaultImport: 'React'
+      },
+      ...examplesGlobalImports
+    }
+  })
 
-      // it's absolute/module path - skip it
-      if (!modulePath.startsWith('.')) return match
-
-      // before the source path, add the relative "difference" between temp folder and file initial path
-      const updatedModulePath = path.join(relativePathFromTemp, modulePath)
-
-      // put all parts together
-      return `${p1}'${updatedModulePath}'`
+  parsedImports = imports.update({
+    imports: parsedImports,
+    if: ({ fromModule }) => fromModule.startsWith('.'),
+    updater: (importItem) => ({
+      ...importItem,
+      fromModule: path.join(relativePathFromTemp, importItem.fromModule)
     })
   })
 
-  // we always use JSX in examples, so the React import is required
-  if (!updatedContent.includes('import React')) {
-    updatedContent = `import React from 'react'\n` + updatedContent
-  }
-
-  if (!updatedContent.includes('import { Frame')) {
-    updatedContent = `import { Frame } from 'gatsby-theme-woly/src/components/frame'\n` + updatedContent
-  }
+  const updatedContent = imports.replace({
+    in: content,
+    with: parsedImports
+  })
 
   // write the result in temp directory
   fs.writeFileSync(at, updatedContent)
+
+  console.log('WRITE', at)
 }
 
-module.exports = () => {
+module.exports = (options) => {
   const codeQueue = []
 
   function placeCodeInQueue({ node, index, parent, codePosition }) {
@@ -86,7 +74,10 @@ module.exports = () => {
   }
 
   async function processCodeQueue(file) {
-    for (const { node, index, parent, codePosition } of codeQueue) {
+    let inserted = 0
+
+    for (const { node, index: initialIndex, parent, codePosition } of codeQueue) {
+      const index = initialIndex + inserted
       const { meta, value: content } = node
 
       if (meta !== 'playground') {
@@ -105,7 +96,8 @@ module.exports = () => {
       writePlaygroundFile({
         at: playgroundFilePath,
         content,
-        filePath
+        filePath,
+        options
       })
 
       // create unique component name to prevent any conflicts
@@ -128,6 +120,8 @@ module.exports = () => {
         type: 'jsx',
         value: jsxString
       })
+
+      inserted += 2
     }
   }
 
@@ -140,12 +134,6 @@ module.exports = () => {
       placeCodeInQueue({ node, index, parent, codePosition })
     })
   }
-
-  // clean the old examples from the previous build
-  rimraf.sync(EXAMPLES_DIR)
-
-  // create examples folder (it can be nested, that's why it should be recursive)
-  fs.mkdirSync(EXAMPLES_DIR, { recursive: true });
 
   async function transformer(tree, file) {
     // we can't use async in 'visit' function, so just enqueue first
