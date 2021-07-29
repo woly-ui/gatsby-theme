@@ -101,7 +101,7 @@ module.exports = (options) => {
       })
 
       // create unique component name to prevent any conflicts
-      const componentName = `Playground_${playgroundId}`
+      const componentName = `Example_${playgroundId}`
 
       const importString = `import { Example as ${componentName} } from '${playgroundFilePath}'`
 
@@ -140,6 +140,18 @@ module.exports = (options) => {
     enqueueCodeBlocks(tree)
 
     await processCodeQueue(file)
+
+    // for backward compatibility
+    visit(tree, 'jsx', (node, index, parent) => {
+      if (node.value.includes('Example_')) return
+
+      parent.children.splice(index + 1, 0, {
+        type: 'code',
+        lang: 'jsx',
+        meta: null,
+        value: node.value,
+      });
+    });
   }
 
   return transformer;
