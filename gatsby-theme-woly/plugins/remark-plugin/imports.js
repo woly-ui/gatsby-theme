@@ -74,7 +74,7 @@ function getEdges(source) {
 
 function add({ imports, new: toAdd }) {
   const result = []
-  const added = new Set()
+  const processed = new Set()
 
   for (const importItem of imports) {
     const { fromModule } = importItem
@@ -106,11 +106,11 @@ function add({ imports, new: toAdd }) {
       namedImports: finalNamedImports
     })
 
-    added.add(fromModule)
+    processed.add(fromModule)
   }
 
   for (const path in toAdd) {
-    if (added.has(path)) continue
+    if (processed.has(path)) continue
 
     result.push({
       fromModule: path,
