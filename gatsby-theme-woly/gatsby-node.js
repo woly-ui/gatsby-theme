@@ -19,17 +19,14 @@ try {
   );
 }
 
-// const EXAMPLES_DIR = path.join(process.cwd(), '.temp/examples')
-//
-// exports.onPreBootstrap = () => {
-//   console.log('CLEAR EXAMPLES')
-//
-//   // clean the old examples from the previous build
-//   rimraf.sync(EXAMPLES_DIR)
-//
-//   // create examples folder (it can be nested, that's why it should be recursive)
-//   fs.mkdirSync(EXAMPLES_DIR, { recursive: true });
-// }
+const EXAMPLES_DIR = path.join(process.cwd(), '.temp/examples')
+
+exports.onPreBootstrap = () => {
+  if (fs.existsSync(EXAMPLES_DIR)) return
+
+  // create examples folder (it can be nested, that's why it should be recursive)
+  fs.mkdirSync(EXAMPLES_DIR, { recursive: true });
+}
 
 exports.onCreateBabelConfig = ({ stage, actions }, pluginOptions) => {
   actions.setBabelPlugin({
@@ -113,8 +110,6 @@ async function createUsagePages({ actions, graphql, reporter }) {
 }
 
 exports.onPostBuild = async (gatsby) => {
-  const tempPath = path.join(process.cwd(), '.temp/')
-  fs.rmdirSync(tempPath)
   await findScreenshotTestingConfigs(gatsby);
 };
 
