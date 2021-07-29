@@ -8,8 +8,6 @@ const pathsPath = require.resolve('./src/paths.js');
 const { paths } = require(pathsPath);
 const fs = require('fs');
 const path = require('path');
-const { onPreBuild } = require('gatsby/dist/utils/api-node-docs');
-const rimraf = require('rimraf');
 
 try {
   require.resolve(`babel-plugin-extract-react-types`);
