@@ -9,14 +9,13 @@ module.exports = (themeOptions) => {
       {
         resolve: `gatsby-plugin-mdx`,
         options: {
-          gatsbyRemarkPlugins: [
-            {
-              resolve: require.resolve('./plugins/gatsby-plugin.js'),
-              options: {},
-            },
-          ],
           rehypePlugins: [require('./plugins/rehype-plugin.js')],
-          remarkPlugins: [require('./plugins/remark-plugin.js')],
+          remarkPlugins: [
+            [
+              require('./plugins/remark-plugin/index.js'),
+              { examplesGlobalImports: themeOptions.examplesGlobalImports }
+            ],
+          ],
         },
       },
       {

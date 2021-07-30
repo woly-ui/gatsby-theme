@@ -17,6 +17,15 @@ try {
   );
 }
 
+const EXAMPLES_DIR = path.join(process.cwd(), '.temp/examples')
+
+exports.onPreBootstrap = () => {
+  if (fs.existsSync(EXAMPLES_DIR)) return
+
+  // create examples folder (it can be nested, that's why it should be recursive)
+  fs.mkdirSync(EXAMPLES_DIR, { recursive: true });
+}
+
 exports.onCreateBabelConfig = ({ stage, actions }, pluginOptions) => {
   actions.setBabelPlugin({
     name: `babel-plugin-extract-react-types`,
